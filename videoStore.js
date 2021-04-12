@@ -3,16 +3,20 @@ import plays from "./plays.js";
 import assert from "assert";
 
 function statement(invoice, plays) {
-	let result = `청구 내역 (고객명:${invoice.customer})\n`;
-	for (let performance of invoice.performances) {
-		result += `  ${playFor(performance).name}: ${usd(amountFor(performance))} (${
-			performance.audience
-		}석)\n`;
-	}
+	return renderPlainText(invoice, plays);
 
-	result += `총액: ${usd(totalAmount())}\n`;
-	result += `적립포인트: ${totalVolumeCredits()}\n`;
-	return result;
+	function renderPlainText(invoice, plays) {
+		let result = `청구 내역 (고객명:${invoice.customer})\n`;
+		for (let performance of invoice.performances) {
+			result += `  ${playFor(performance).name}: ${usd(amountFor(performance))} (${
+				performance.audience
+			}석)\n`;
+		}
+
+		result += `총액: ${usd(totalAmount())}\n`;
+		result += `적립포인트: ${totalVolumeCredits()}\n`;
+		return result;
+	}
 
 	// 중간점검: 구조는 한결 깔끔해 졌지만 중첩함수가 난무한다.
 	// 임시변수 지우기의 효과 1
