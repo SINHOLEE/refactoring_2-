@@ -33,6 +33,17 @@ function amountFor(aPerformance) {
 	return result;
 }
 
+function volumeCreditsFor(aPerformance) {
+	let result = 0;
+	// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
+
+	if ("comedy" === playFor(aPerformance).type) {
+		result += Math.floor(aPerformance.audience / 5);
+	}
+	// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
+	result += Math.max(aPerformance.audience - 30, 0);
+	return result;
+}
 function statement(invoice, plays) {
 	let totalAmount = 0;
 	let volumeCredits = 0;
@@ -44,11 +55,7 @@ function statement(invoice, plays) {
 	}).format;
 
 	for (let performance of invoice.performances) {
-		// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
-		volumeCredits += Math.max(performance.audience - 30, 0);
-		// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
-		if ("comedy" === playFor(performance).type)
-			volumeCredits += Math.floor(performance.audience / 5);
+		volumeCredits += volumeCreditsFor(performance);
 		result += `  ${playFor(performance).name}: ${format(amountFor(performance) / 100)} (${
 			performance.audience
 		}석)\n`;
@@ -71,3 +78,4 @@ assert.equal(
 총액: $1,730.00
 적립포인트: $47.00\n`,
 );
+console.log(statement(invoices[0], plays));
