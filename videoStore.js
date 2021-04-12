@@ -3,48 +3,37 @@ import plays from "./plays.js";
 import assert from "assert";
 
 function statement(invoice, plays) {
-	return renderPlainText(invoice, plays);
-
-	function renderPlainText(invoice, plays) {
-		let result = `청구 내역 (고객명:${invoice.customer})\n`;
-		for (let performance of invoice.performances) {
-			result += `  ${playFor(performance).name}: ${usd(amountFor(performance))} (${
-				performance.audience
-			}석)\n`;
-		}
-
-		result += `총액: ${usd(totalAmount())}\n`;
-		result += `적립포인트: ${totalVolumeCredits()}\n`;
-		return result;
-	}
-
-	// 중간점검: 구조는 한결 깔끔해 졌지만 중첩함수가 난무한다.
-	// 임시변수 지우기의 효과 1
+	const statementData = {};
+	statementData.customer = invoice.customer;
+	// 이때 불변데이터로 바꾼다.
+	statementData.performances = invoice.performances.map(enrichPerformance);
+	statementData.totalAmount = totalAmount();
+	return renderPlainText(statementData, plays);
 	function totalAmount() {
 		let result = 0;
-		for (let performance of invoice.performances) {
-			result += amountFor(performance);
+		for (let performance of statementData.performances) {
+			result += performance.amount;
 		}
 		return result;
 	}
-	function totalVolumeCredits() {
-		let result = 0;
-		for (let performance of invoice.performances) {
-			result += volumeCreditsFor(performance);
-		}
+
+	// model 변경 혹은 시리얼라이징!
+	function enrichPerformance(aPerformance) {
+		const result = Object.assign({}, aPerformance);
+		result.play = playFor(result);
+		result.amount = amountFor(result);
+		result.volumeCredits = volumeCreditsFor(result);
+
 		return result;
 	}
+
 	function playFor(aPerformance) {
 		return plays[aPerformance.playID];
 	}
 
-	// playFor을 이용하여 amountFor 인자를 줄였을때의 이득
-	// 임시변수에 대한 복잡도가 줄어들어 코드를 읽는데 있어 덜 부담스럽다.
-	// 지역변수를 제거함으로써 얻을 수 있는 가장 큰 이득은 추출작업이 쉬워진다는 것
-	// 유효범위를 신경써야할 대상이 줄었기 때문이다. -> 지역변수를 최대한 줄이는 것이 리팩터링의 첫 단계!
 	function amountFor(aPerformance) {
 		let result = 0;
-		switch (playFor(aPerformance).type) {
+		switch (aPerformance.play.type) {
 			case "tragedy":
 				result = 40000;
 				if (aPerformance.audience > 30) {
@@ -65,17 +54,10 @@ function statement(invoice, plays) {
 		return result;
 	}
 
-	function usd(aNumber) {
-		return new Intl.NumberFormat("en-US", {
-			style: "currency",
-			currency: "USD",
-			minimumFractionDigits: 2,
-		}).format(aNumber / 100);
-	}
 	function volumeCreditsFor(aPerformance) {
 		let result = 0;
 		// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
-		if ("comedy" === playFor(aPerformance).type) {
+		if ("comedy" === aPerformance.play.type) {
 			result += Math.floor(aPerformance.audience / 5);
 		}
 		// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
@@ -84,8 +66,35 @@ function statement(invoice, plays) {
 	}
 }
 
-// 현재 나쁜냄새가 나는 부분
-// 1 switch문, 2. if comedy
+function renderPlainText(data, plays) {
+	let result = `청구 내역 (고객명:${data.customer})\n`;
+	for (let performance of data.performances) {
+		result += `  ${performance.play.name}: ${usd(performance.amount)} (${
+			performance.audience
+		}석)\n`;
+	}
+
+	result += `총액: ${usd(data.totalAmount)}\n`;
+	result += `적립포인트: ${totalVolumeCredits()}\n`;
+	return result;
+
+	// 중간점검: 구조는 한결 깔끔해 졌지만 중첩함수가 난무한다.
+	// 임시변수 지우기의 효과 1
+	function totalVolumeCredits() {
+		let result = 0;
+		for (let performance of data.performances) {
+			result += performance.volumeCredits;
+		}
+		return result;
+	}
+	function usd(aNumber) {
+		return new Intl.NumberFormat("en-US", {
+			style: "currency",
+			currency: "USD",
+			minimumFractionDigits: 2,
+		}).format(aNumber / 100);
+	}
+}
 
 assert.equal(
 	statement(invoices[0], plays),
