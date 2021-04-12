@@ -1,7 +1,11 @@
 import invoices from "./invoices.js";
 import plays from "./plays.js";
 
-function amountFor(aPerformance, play) {
+function playFor(aPerformance) {
+	return plays[aPerformance.playID];
+}
+
+function amountFor(aPerformance) {
 	let result = 0;
 	switch (playFor(aPerformance).type) {
 		case "tragedy":
@@ -24,9 +28,6 @@ function amountFor(aPerformance, play) {
 	return result;
 }
 
-function playFor(aPerformance) {
-	return plays[aPerformance.playID];
-}
 function statement(invoice, plays) {
 	let totalAmount = 0;
 	let volumeCredits = 0;
@@ -38,7 +39,7 @@ function statement(invoice, plays) {
 	}).format;
 
 	for (let perf of invoice.performances) {
-		let thisAmount = amountFor(perf, playFor(perf));
+		let thisAmount = amountFor(perf);
 		// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
 		volumeCredits += Math.max(perf.audience - 30, 0);
 		// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
