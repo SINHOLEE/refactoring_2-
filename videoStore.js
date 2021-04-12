@@ -5,6 +5,10 @@ function playFor(aPerformance) {
 	return plays[aPerformance.playID];
 }
 
+// playFor을 이용하여 amountFor 인자를 줄였을때의 이득
+// 임시변수에 대한 복잡도가 줄어들어 코드를 읽는데 있어 덜 부담스럽다.
+// 지역변수를 제거함으로써 얻을 수 있는 가장 큰 이득은 추출작업이 쉬워진다는 것
+// 유효범위를 신경써야할 대상이 줄었기 때문이다. -> 지역변수를 최대한 줄이는 것이 리팩터링의 첫 단계!
 function amountFor(aPerformance) {
 	let result = 0;
 	switch (playFor(aPerformance).type) {
@@ -39,13 +43,12 @@ function statement(invoice, plays) {
 	}).format;
 
 	for (let perf of invoice.performances) {
-		let thisAmount = amountFor(perf);
 		// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
 		volumeCredits += Math.max(perf.audience - 30, 0);
 		// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
 		if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
-		result += `  ${playFor(perf).name}: ${format(thisAmount / 100)} (${perf.audience}석)\n`;
-		totalAmount += thisAmount;
+		result += `  ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience}석)\n`;
+		totalAmount += amountFor(perf);
 	}
 	result += `총액: ${format(totalAmount / 100)}\n`;
 	result += `적립포인트: ${format(volumeCredits)}\n`;
