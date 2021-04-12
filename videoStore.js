@@ -34,14 +34,14 @@ function amountFor(aPerformance) {
 }
 
 function volumeCreditsFor(aPerformance) {
-	let volumeCredits = 0;
+	let result = 0;
 	// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
 	if ("comedy" === playFor(aPerformance).type) {
-		volumeCredits += Math.floor(aPerformance.audience / 5);
+		result += Math.floor(aPerformance.audience / 5);
 	}
 	// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
-	volumeCredits += Math.max(aPerformance.audience - 30, 0);
-	return volumeCredits;
+	result += Math.max(aPerformance.audience - 30, 0);
+	return result;
 }
 function statement(invoice, plays) {
 	let totalAmount = 0;
