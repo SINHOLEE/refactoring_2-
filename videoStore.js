@@ -24,6 +24,9 @@ function amountFor(aPerformance, play) {
 	return result;
 }
 
+function playFor(aPerformance) {
+	return plays[aPerformance.playID];
+}
 function statement(invoice, plays) {
 	let totalAmount = 0;
 	let volumeCredits = 0;
@@ -35,13 +38,12 @@ function statement(invoice, plays) {
 	}).format;
 
 	for (let perf of invoice.performances) {
-		const play = plays[perf.playID];
-		let thisAmount = amountFor(perf, play);
+		let thisAmount = amountFor(perf, playFor(perf));
 		// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
 		volumeCredits += Math.max(perf.audience - 30, 0);
 		// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
-		if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
-		result += `  ${play.name}: ${format(thisAmount / 100)} (${perf.audience}석)\n`;
+		if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
+		result += `  ${playFor(perf).name}: ${format(thisAmount / 100)} (${perf.audience}석)\n`;
 		totalAmount += thisAmount;
 	}
 	result += `총액: ${format(totalAmount / 100)}\n`;
