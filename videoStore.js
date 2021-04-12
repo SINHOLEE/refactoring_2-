@@ -1,5 +1,6 @@
 import invoices from "./invoices.js";
 import plays from "./plays.js";
+import assert from "assert";
 
 function playFor(aPerformance) {
 	return plays[aPerformance.playID];
@@ -42,13 +43,16 @@ function statement(invoice, plays) {
 		minimumFractionDigits: 2,
 	}).format;
 
-	for (let perf of invoice.performances) {
+	for (let performance of invoice.performances) {
 		// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
-		volumeCredits += Math.max(perf.audience - 30, 0);
+		volumeCredits += Math.max(performance.audience - 30, 0);
 		// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
-		if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
-		result += `  ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${perf.audience}석)\n`;
-		totalAmount += amountFor(perf);
+		if ("comedy" === playFor(performance).type)
+			volumeCredits += Math.floor(performance.audience / 5);
+		result += `  ${playFor(performance).name}: ${format(amountFor(performance) / 100)} (${
+			performance.audience
+		}석)\n`;
+		totalAmount += amountFor(performance);
 	}
 	result += `총액: ${format(totalAmount / 100)}\n`;
 	result += `적립포인트: ${format(volumeCredits)}\n`;
@@ -57,4 +61,13 @@ function statement(invoice, plays) {
 
 // 현재 나쁜냄새가 나는 부분
 // 1 switch문, 2. if comedy
-console.log(statement(invoices[0], plays));
+
+assert.equal(
+	statement(invoices[0], plays),
+	`청구 내역 (고객명:Bigco)
+  Hamlet: $650.00 (55석)
+  As You Like It: $580.00 (35석)
+  Othello: $500.00 (40석)
+총액: $1,730.00
+적립포인트: $47.00\n`,
+);
