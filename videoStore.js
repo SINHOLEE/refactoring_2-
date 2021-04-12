@@ -33,6 +33,13 @@ function amountFor(aPerformance) {
 	return result;
 }
 
+function usd(aNumber) {
+	return new Intl.NumberFormat("en-US", {
+		style: "currency",
+		currency: "USD",
+		minimumFractionDigits: 2,
+	}).format(aNumber / 100);
+}
 function volumeCreditsFor(aPerformance) {
 	let result = 0;
 	// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
@@ -43,25 +50,26 @@ function volumeCreditsFor(aPerformance) {
 	result += Math.max(aPerformance.audience - 30, 0);
 	return result;
 }
+
 function statement(invoice, plays) {
+	function totalVolumeCredits() {
+		let result = 0;
+		for (let performance of invoice.performances) {
+			result += volumeCreditsFor(performance);
+		}
+		return result;
+	}
 	let totalAmount = 0;
-	let volumeCredits = 0;
 	let result = `청구 내역 (고객명:${invoice.customer})\n`;
-	const format = new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
-		minimumFractionDigits: 2,
-	}).format;
 
 	for (let performance of invoice.performances) {
-		volumeCredits += volumeCreditsFor(performance);
-		result += `  ${playFor(performance).name}: ${format(amountFor(performance) / 100)} (${
+		result += `  ${playFor(performance).name}: ${usd(amountFor(performance))} (${
 			performance.audience
 		}석)\n`;
 		totalAmount += amountFor(performance);
 	}
-	result += `총액: ${format(totalAmount / 100)}\n`;
-	result += `적립포인트: ${format(volumeCredits)}\n`;
+	result += `총액: ${usd(totalAmount)}\n`;
+	result += `적립포인트: ${totalVolumeCredits()}\n`;
 	return result;
 }
 
@@ -75,6 +83,6 @@ assert.equal(
   As You Like It: $580.00 (35석)
   Othello: $500.00 (40석)
 총액: $1,730.00
-적립포인트: $47.00\n`,
+적립포인트: 47\n`,
 );
 console.log(statement(invoices[0], plays));
