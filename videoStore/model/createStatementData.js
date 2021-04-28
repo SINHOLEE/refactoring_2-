@@ -18,9 +18,9 @@ class PerformanceCalculator {
 
 function createFactoryPerformanceCalculator(aPerformance, aPlay) {
 	switch (aPlay.type) {
-		case "tragedy":
+		case 'tragedy':
 			return new TragedyCalculator(aPerformance, aPlay);
-		case "comedy":
+		case 'comedy':
 			return new ComedyCalculator(aPerformance, aPlay);
 		default:
 			throw new Error(`알 수 없는 장르: ${aPlay.type}`);
@@ -68,12 +68,15 @@ export default function createStatementData(invoice, plays) {
 	statementData.performances = invoice.performances.map(enrichPerformance);
 	statementData.totalAmount = totalAmount(statementData);
 	statementData.totalVolumeCredits = totalVolumeCredits(statementData);
-	console.log(JSON.stringify(statementData));
+	// console.log(JSON.stringify(statementData));
 	return statementData;
 
 	// model 변경 혹은 시리얼라이징!
 	function enrichPerformance(aPerformance) {
-		const calculator = createFactoryPerformanceCalculator(aPerformance, playFor(aPerformance));
+		const calculator = createFactoryPerformanceCalculator(
+			aPerformance,
+			playFor(aPerformance)
+		);
 		const result = Object.assign({}, aPerformance);
 		result.play = calculator.play;
 		result.amount = calculator.amount;
@@ -84,12 +87,15 @@ export default function createStatementData(invoice, plays) {
 	function totalVolumeCredits(data) {
 		return data.performances.reduce(
 			(total, performance) => total + performance.volumeCredits,
-			0,
+			0
 		);
 	}
 
 	function totalAmount(data) {
-		return data.performances.reduce((total, performance) => total + performance.amount, 0);
+		return data.performances.reduce(
+			(total, performance) => total + performance.amount,
+			0
+		);
 	}
 
 	function playFor(aPerformance) {

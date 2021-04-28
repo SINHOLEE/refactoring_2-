@@ -1,13 +1,13 @@
-import invoices from "./../invoices.js";
-import plays from "./../plays.js";
+import invoices from './../invoices.js';
+import plays from './../plays.js';
 
 function statement(invoice, plays) {
 	let totalAmount = 0;
 	let volumeCredits = 0;
 	let result = `청구 내역 (고객명:${invoice.customer})\n`;
-	const format = new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
+	const format = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
 		minimumFractionDigits: 2,
 	}).format;
 
@@ -15,13 +15,13 @@ function statement(invoice, plays) {
 		const play = plays[perf.playID];
 		let thisAmount = 0;
 		switch (play.type) {
-			case "tragedy":
+			case 'tragedy':
 				thisAmount = 40000;
 				if (perf.audience > 30) {
 					thisAmount += 1000 * (perf.audience - 30);
 				}
 				break;
-			case "comedy":
+			case 'comedy':
 				thisAmount = 30000;
 				if (perf.audience > 20) {
 					thisAmount += 10000 + 500 * (perf.audience - 20);
@@ -35,8 +35,10 @@ function statement(invoice, plays) {
 		// 포인트를 적립한다.? 30명 이상이면 포인트를 준다.
 		volumeCredits += Math.max(perf.audience - 30, 0);
 		// 코메디 장르일 경우 5명 마다 추가 포인트를 적립해준다.
-		if ("comedy" === play.type) volumeCredits += Math.floor(perf.audience / 5);
-		result += `  ${play.name}: ${format(thisAmount / 100)} (${perf.audience}석)\n`;
+		if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+		result += `  ${play.name}: ${format(thisAmount / 100)} (${
+			perf.audience
+		}석)\n`;
 		totalAmount += thisAmount;
 	}
 	result += `총액: ${format(totalAmount / 100)}\n`;
@@ -46,4 +48,4 @@ function statement(invoice, plays) {
 
 // 현재 나쁜냄새가 나는 부분
 // 1 switch문, 2. if comedy
-console.log(statement(invoices[0], plays));
+// console.log(statement(invoices[0], plays));
