@@ -7,8 +7,7 @@ class PerformanceCalculator {
 		this.play = aPlay;
 	}
 	get amount() {
-				throw new Error(`알 수 없는 장르: ${aPlay.type}`);
-		}
+		throw new Error(`현재 사용하지 않는 메서드입니다.`);
 	}
 	get volumeCredits() {
 		return Math.max(this.performance.audience - 30, 0);
@@ -69,6 +68,7 @@ export default function createStatementData(invoice, plays) {
 	statementData.performances = invoice.performances.map(enrichPerformance);
 	statementData.totalAmount = totalAmount(statementData);
 	statementData.totalVolumeCredits = totalVolumeCredits(statementData);
+	console.log(JSON.stringify(statementData));
 	return statementData;
 
 	// model 변경 혹은 시리얼라이징!
@@ -82,7 +82,10 @@ export default function createStatementData(invoice, plays) {
 		return result;
 	}
 	function totalVolumeCredits(data) {
-		return data.performances.reduce((total, performance) => total + performance.volumeCredits, 0);
+		return data.performances.reduce(
+			(total, performance) => total + performance.volumeCredits,
+			0,
+		);
 	}
 
 	function totalAmount(data) {
