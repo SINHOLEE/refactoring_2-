@@ -43,6 +43,24 @@ function priceOrder(product, quantity, shippingMethod) {
 }
 
 describe("price Order", () => {
+	let dummyProduct;
+	let dummyShippingMethod;
+	beforeEach(() => {
+		dummyProduct = {
+			name: "apple",
+			productID: "uuid1",
+			basePrice: 100,
+			discountThreshold: 30, // 개
+			discountRate: 0.1, // 10%
+		};
+
+		dummyShippingMethod = {
+			discountThreshold: 20, // 개
+			discountedFee: 2,
+			feePerCase: 3,
+		};
+	});
+
 	it("happy plan - quntity = 40", () => {
 		const price = priceOrder(dummyProduct, 40, dummyShippingMethod);
 		expect(price).toBe(3980);
