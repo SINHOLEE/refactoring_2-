@@ -1,26 +1,32 @@
 {
-	"name": "refactoring_second_pub",
-	"version": "1.0.0",
-	"main": "index.js",
-	"repository": "https://github.com/SINHOLEE/refactoring_2-.git",
-	"author": "sinholee <dltlsgh5@gmail.com>",
-	"license": "MIT",
-	"type": "module",
-	"scripts": {
-		"start:ch8-2": "node --loader ts-node/esm src/chapter8/8-2/index.ts"
-	},
-	"devDependencies": {
-		"@babel/core": "^7.13.15",
-		"@babel/node": "^7.13.13",
-		"@babel/preset-env": "^7.13.15",
-		"@types/jest": "^26.0.22",
-		"jest": "^26.6.3"
-	},
-	"dependencies": {
-		"@babel/parser": "^7.17.9",
-		"@babel/types": "^7.17.0",
-		"@types/node": "^17.0.26",
-		"ts-node": "^10.7.0",
-		"typescript": "^4.6.3"
-	}
+  "name": "refactoring_second_pub",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/SINHOLEE/refactoring_2-.git",
+  "author": "sinholee <dltlsgh5@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start:ch8-2": "node --loader ts-node/esm src/chapter8/8-2/index.ts",
+    "test:ch8-2": "jest src/chapter8/8-2* --watch",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/node": "^7.13.13",
+    "@babel/parser": "^7.17.9",
+    "@babel/plugin-transform-modules-commonjs": "^7.17.9",
+    "@babel/preset-env": "^7.13.15",
+    "@babel/types": "^7.17.0",
+    "@types/node": "^17.0.26",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.4.1",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4"
+  }
 }
