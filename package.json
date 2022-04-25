@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "start:ch8-2": "node --loader ts-node/esm src/chapter8/8-2/index.ts",
-    "test:ch8-2": "jest src/chapter8/8-2* --watch",
+    "test:ch8": "jest src/chapter8* --watch",
     "test": "jest"
   },
   "devDependencies": {
