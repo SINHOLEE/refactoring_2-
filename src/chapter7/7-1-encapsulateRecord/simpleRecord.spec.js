@@ -1,4 +1,4 @@
-import {getOrganization} from "./simpleRecord";
+import {getOrganization} from "./simpleRecord.js";
 
 // 사용처
 describe("simpleRecord to encapsulated object", () => {

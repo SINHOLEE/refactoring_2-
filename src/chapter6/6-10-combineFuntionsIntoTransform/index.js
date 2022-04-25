@@ -1,4 +1,4 @@
-import {baseRate, deepCopy, taxThreshold} from "./utils";
+import {baseRate, deepCopy, taxThreshold} from "./utils.js";
 
 export function enrichReading(aReaing) {
 	let copiedReading = deepCopy(aReaing);

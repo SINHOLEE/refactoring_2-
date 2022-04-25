@@ -1,4 +1,4 @@
-import {reading} from "./readingData";
+import {reading} from "./readingData.js";
 
 export function baseRate(aMonth, aYear) {
 	// 어떤 계산식
