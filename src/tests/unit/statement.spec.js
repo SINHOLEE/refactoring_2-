@@ -1,5 +1,5 @@
-import invoices from "../../invoices.js";
-import plays from "../../plays.js";
+import invoices from "../../videoStore/invoices.js";
+import plays from "../../videoStore/plays.js";
 import createStatementData from "../../videoStore/model/createStatementData.js";
 
 describe("init test", () => {

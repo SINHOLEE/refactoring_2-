@@ -3,9 +3,9 @@ import AccountType from "./AccountType";
 export default class Account {
     private readonly _daysOverdrawn: number
     private readonly type: { isPremium: boolean }
-    private readonly accountType:AccountType
+    private readonly accountType: AccountType
 
-    constructor(daysOverdrawn: number, type,accountType:AccountType) {
+    constructor(daysOverdrawn: number, type: { isPremium: boolean }, accountType: AccountType) {
         this._daysOverdrawn = daysOverdrawn
         this.type = type
         this.accountType = accountType
